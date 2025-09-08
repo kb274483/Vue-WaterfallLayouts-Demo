@@ -1,11 +1,30 @@
 <template>
   <div class="main-container">
+    <div class="control-container">
+      <div class="control-item">
+        <label for="columns">Columns</label>
+        <div>
+          <span class="control-item-button" @click="updateColumns('-')">-</span>
+          <input type="number" id="columns" v-model="columns" disabled />
+          <span class="control-item-button" @click="updateColumns('+')">+</span>
+        </div>
+      </div>
+      <div class="control-item">
+        <label for="fadeInAndOut">Fade In And Out</label>
+        <input type="checkbox" id="fadeInAndOut" v-model="fadeInAndOut" />
+      </div>
+      <div class="control-item">
+        <label for="hoverEffect">Hover Effect</label>
+        <input type="checkbox" id="hoverEffect" v-model="hoverEffect" />
+      </div>
+    </div>
     <div class="waterfall-container">
       <WaterfallContainer 
+        :key="`waterfall-${columns}`"
         :items="testImages" 
-        :columns="4"
-        :fade-in-and-out="true"
-        :hover-effect="true"
+        :columns="columns"
+        :fade-in-and-out="fadeInAndOut"
+        :hover-effect="hoverEffect"
         :click-function="handleItemClick"
         :hover-function="handleItemHover"
         :hover-leave-function="handleItemLeave"
@@ -195,6 +214,10 @@ const testImages = ref([
   },
 ])
 
+const columns = ref(8)
+const fadeInAndOut = ref(true)
+const hoverEffect = ref(true)
+
 // 點擊事件處理
 const handleItemClick = (item) => {
   console.log('點擊了項目:', item)
@@ -210,13 +233,134 @@ const handleItemHover = (item) => {
 const handleItemLeave = (item) => {
   console.log('離開 Hover 項目:', item)
 }
+
+const updateColumns = (type) => {
+  if (type === '-') {
+    if (columns.value <= 1) {
+      return
+    }
+    columns.value--
+  } else {
+    if (columns.value >= 8) {
+      return
+    }
+    columns.value++
+  }
+}
 </script>
 
 <style scoped>
 .main-container{
   width: 100%;
+  min-height: 100vh;
   background-color: #2f2f2f;
   padding:2rem 0;
+}
+
+.control-container {
+  width: 90%;
+  max-width: 500px;
+  margin: 0 auto 2rem auto;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e2e8f0;
+  position: relative;
+}
+
+#columns {
+  border: none;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.control-item:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.control-item-button {
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0.25rem;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  user-select: none;
+  min-width: 40px;
+  text-align: center;
+  display: inline-block;
+  border-radius: 8px;
+}
+
+.control-item-button:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+.control-item:last-child {
+  margin-bottom: 0;
+}
+
+.control-item label {
+  color: #374151;
+  font-weight: 600;
+  font-size: 1rem;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.control-item input[type="number"] {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #374151;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  width: 80px;
+  transition: all 0.3s ease;
+}
+
+.control-item input[type="number"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  transform: scale(1.05);
+}
+
+.control-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+.control-item input[type="checkbox"]:hover {
+  transform: scale(1.2);
 }
 
 .waterfall-container{
